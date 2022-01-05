@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human, don't be annoyed!</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/game.css"></link>
+    
+</head>
+<body>
+    <section id="header">
+        <h1 id="titleheader">Human, don't be annoyed!</h1>
+    </section>
+
+    <main id="screen">
+        <div id="container">
+            <div id="board">
+                <div class="box home blue" style="grid-row:1; grid-column: 1;"></div>
+                <div class="box home blue" style="grid-row:1; grid-column: 2;"></div>
+                <div class="box empty" style="grid-row:1; grid-column: 3;"></div>
+                <div class="box empty" style="grid-row:1; grid-column: 4;"></div>
+                <div class="box" id="box-19" style="grid-row:1; grid-column: 5;"></div>
+                <div class="box" id="box-20" style="grid-row:1; grid-column: 6;"></div>
+                <div class="box start darkblue" id="box-21" style="grid-row:1; grid-column: 7;"></div>
+                <div class="box empty" style="grid-row:1; grid-column: 8;"></div>
+                <div class="box empty" style="grid-row:1; grid-column: 9;"></div>
+                <div class="box home darkblue" style="grid-row:1; grid-column: 10;"></div>
+                <div class="box home darkblue" style="grid-row:1; grid-column: 11;"></div>
+
+                <div class="box home blue" style="grid-row:2; grid-column: 1;"></div>
+                <div class="box home blue" style="grid-row:2; grid-column: 2;"></div>
+                <div class="box empty" style="grid-row:2; grid-column: 3;"></div>
+                <div class="box empty" style="grid-row:2; grid-column: 4;"></div>
+                <div class="box" id="box-18" style="grid-row:2; grid-column: 5;"></div>
+                <div class="box dest darkblue" style="grid-row:2; grid-column: 6;"></div>
+                <div class="box" id="box-22" style="grid-row:2; grid-column: 7;"></div>
+                <div class="box empty" style="grid-row:2; grid-column: 8;"></div>
+                <div class="box empty" style="grid-row:2; grid-column: 9;"></div>
+                <div class="box home darkblue" style="grid-row:2; grid-column: 10;"></div>
+                <div class="box home darkblue" style="grid-row:2; grid-column: 11;"></div>
+
+                <div class="box empty" style="grid-row:3; grid-column: 1;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 2;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 3;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 4;"></div>
+                <div class="box" id="box-17" style="grid-row:3; grid-column: 5;"></div>
+                <div class="box dest darkblue" style="grid-row:3; grid-column: 6;"></div>
+                <div class="box" id="box-23" style="grid-row:3; grid-column: 7;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 8;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 9;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 10;"></div>
+                <div class="box empty" style="grid-row:3; grid-column: 11;"></div>
+                
+                <div class="box empty" style="grid-row:4; grid-column: 1;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 2;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 3;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 4;"></div>
+                <div class="box" id="box-16" style="grid-row:4; grid-column: 5;"></div>
+                <div class="box dest darkblue" style="grid-row:4; grid-column: 6;"></div>
+                <div class="box" id="box-24" style="grid-row:4; grid-column: 7;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 8;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 9;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 10;"></div>
+                <div class="box empty" style="grid-row:4; grid-column: 11;"></div>
+
+                <div class="box start blue" id="box-11" style="grid-row:5; grid-column: 1;"></div>
+                <div class="box" id="box-12" style="grid-row:5; grid-column: 2;"></div>
+                <div class="box" id="box-13" style="grid-row:5; grid-column: 3;"></div>
+                <div class="box" id="box-14" style="grid-row:5; grid-column: 4;"></div>
+                <div class="box" id="box-15" style="grid-row:5; grid-column: 5;"></div>
+                <div class="box dest darkblue" style="grid-row:5; grid-column: 6;"></div>
+                <div class="box" id="box-25" style="grid-row:5; grid-column: 7;"></div>
+                <div class="box" id="box-26" style="grid-row:5; grid-column: 8;"></div>
+                <div class="box" id="box-27" style="grid-row:5; grid-column: 9;"></div>
+                <div class="box" id="box-28" style="grid-row:5; grid-column: 10;"></div>
+                <div class="box" id="box-29" style="grid-row:5; grid-column: 11;"></div>
+
+                <div class="box" id="box-10" style="grid-row:6; grid-column: 1;"></div>
+                <div class="box dest blue" style="grid-row:6; grid-column: 2;"></div>
+                <div class="box dest blue" style="grid-row:6; grid-column: 3;"></div>
+                <div class="box dest blue" style="grid-row:6; grid-column: 4;"></div>
+                <div class="box dest blue" style="grid-row:6; grid-column: 5;"></div>
+                <div class="box empty" style="grid-row:6; grid-column: 6;"></div>
+                <div class="box dest grayblue" style="grid-row:6; grid-column: 7;"></div>
+                <div class="box dest grayblue" style="grid-row:6; grid-column: 8;"></div>
+                <div class="box dest grayblue" style="grid-row:6; grid-column: 9;"></div>
+                <div class="box dest grayblue" style="grid-row:6; grid-column: 10;"></div>
+                <div class="box" id="box-30" style="grid-row:6; grid-column: 11;"></div>
+                
+                <div class="box" id="box-9" style="grid-row:7; grid-column:1;"></div>
+                <div class="box" id="box-8" style="grid-row:7; grid-column:2;"></div>
+                <div class="box" id="box-7" style="grid-row:7; grid-column:3;"></div>
+                <div class="box" id="box-6" style="grid-row:7; grid-column:4;"></div>
+                <div class="box" id="box-5" style="grid-row:7; grid-column:5;"></div>
+                <div class="box dest gray" style="grid-row:7; grid-column:6;"></div>
+                <div class="box" id="box-35" style="grid-row:7; grid-column:7;"></div>
+                <div class="box" id="box-34" style="grid-row:7; grid-column:8;"></div>
+                <div class="box" id="box-33" style="grid-row:7; grid-column:9;"></div>
+                <div class="box" id="box-32" style="grid-row:7; grid-column:10;"></div>
+                <div class="box start grayblue" id="box-31" style="grid-row:7; grid-column:11;"></div>
+
+                <div class="box empty" style="grid-row:8; grid-column:1;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:2;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:3;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:4;"></div>
+                <div class="box" id="box-4" style="grid-row:8; grid-column:5;"></div>
+                <div class="box dest gray" style="grid-row:8; grid-column:6;"></div>
+                <div class="box" id="box-36" style="grid-row:8; grid-column:7;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:8;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:9;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:10;"></div>
+                <div class="box empty" style="grid-row:8; grid-column:11;"></div>
+                
+                <div class="box empty" style="grid-row:9; grid-column:1;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:2;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:3;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:4;"></div>
+                <div class="box" id="box-3" style="grid-row:9; grid-column:5;"></div>
+                <div class="box dest gray" style="grid-row:9; grid-column:6;"></div>
+                <div class="box" id="box-37" style="grid-row:9; grid-column:7;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:8;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:9;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:10;"></div>
+                <div class="box empty" style="grid-row:9; grid-column:11;"></div>
+
+                <div class="box home gray" style="grid-row:10; grid-column:1;"></div>
+                <div class="box home gray" style="grid-row:10; grid-column:2;"></div>
+                <div class="box empty" style="grid-row:10; grid-column:3;"></div>
+                <div class="box empty" style="grid-row:10; grid-column:4;"></div>
+                <div class="box" id="box-2" style="grid-row:10; grid-column:5;"></div>
+                <div class="box dest gray" style="grid-row:10; grid-column:6;"></div>
+                <div class="box" id="box-38" style="grid-row:10; grid-column:7;"></div>
+                <div class="box empty" style="grid-row:10; grid-column:8;"></div>
+                <div class="box empty" style="grid-row:10; grid-column:9;"></div>
+                <div class="box home grayblue" style="grid-row:10; grid-column:10;"></div>
+                <div class="box home grayblue" style="grid-row:10; grid-column:11;"></div>
+                
+                <div class="box home gray" style="grid-row:11; grid-column:1;"></div>
+                <div class="box home gray" style="grid-row:11; grid-column:2;"></div>
+                <div class="box empty" style="grid-row:11; grid-column:3;"></div>
+                <div class="box empty" style="grid-row:11; grid-column:4;"></div>
+                <div class="box start gray" id="box-1" style="grid-row:11; grid-column:5;"></div>
+                <div class="box" id="box-40" style="grid-row:11; grid-column: 6;"></div>
+                <div class="box" id="box-39" style="grid-row:11; grid-column:7;"></div>
+                <div class="box empty" style="grid-row:11; grid-column:8;"></div>
+                <div class="box empty" style="grid-row:11; grid-column:9;"></div>
+                <div class="box home grayblue" style="grid-row:11; grid-column:10;"></div>
+                <div class="box home grayblue" style="grid-row:11; grid-column:11;"></div>
+                
+
+                <!-- All pawns and highlighted boxes -->
+                <div class="box pawn" id="pawn-1-1"></div>
+                <div class="box pawn" id="pawn-1-2"></div>
+                <div class="box pawn" id="pawn-1-3"></div>
+                <div class="box pawn" id="pawn-1-4"></div>
+
+                <div class="box pawn" id="pawn-2-1"></div>
+                <div class="box pawn" id="pawn-2-2"></div>
+                <div class="box pawn" id="pawn-2-3"></div>
+                <div class="box pawn" id="pawn-2-4"></div>
+
+                <div class="box pawn" id="pawn-3-1"></div>
+                <div class="box pawn" id="pawn-3-2"></div>
+                <div class="box pawn" id="pawn-3-3"></div>
+                <div class="box pawn" id="pawn-3-4"></div>
+
+                <div class="box pawn" id="pawn-4-1"></div>
+                <div class="box pawn" id="pawn-4-2"></div>
+                <div class="box pawn" id="pawn-4-3"></div>
+                <div class="box pawn" id="pawn-4-4"></div>
+
+                <div class="box highlighted" id="highlighted-1"></div>
+                <div class="box highlighted" id="highlighted-1"></div>
+                <div class="box highlighted" id="highlighted-1"></div>
+                <div class="box highlighted" id="highlighted-1"></div>
+            </div>
+        </div>
+        
+        <div class="userinfo">
+            <p id="messages">This is a message for the player...
+                <span id="test2"></span>
+            </p>
+            <div id="dice">
+                <img id="diceimage" src="images/1dice.svg" onclick="throwdice()"></img>
+                <div class="overlay" onclick="throwdice()">
+                    <div class="text">Click to throw</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <section id="players">
+            <p>Player 1: <span></span></p>
+            <p>Player 2: <span></span></p>
+            <p>Player 3: <span></span></p>
+            <p>Player 4: <span></span></p>
+        </section>
+         -->
+
+    </main>
+    <script src="javascripts/game.js"></script>
+</body>
+</html>
