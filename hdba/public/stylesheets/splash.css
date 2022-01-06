@@ -1,23 +1,45 @@
 body{
   font-family: 'Segoe UI';
-  color: rgb(2, 2, 2);
+  color: rgb(20, 20, 20);
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  flex-direction: column;
 }
 
 #header{
   font-size: 50px;
   color: #2A5CBF;
   font-family: "Oswald";
-  
-  text-align: center;
+  /* text-align: center; */
   font-weight: 700;
 }
 
 #button{
   background-color: #2A5CBF;
   border: none;
-  padding: 20px;
-  color: rgb(2, 2, 2);
+  padding: 20px 50px;
+  color: white;
   text-align: center;
   display: inline-block;
-  font-size: 16px;
+  font-size: 32px;
+  align-items: center;
+  border: 2px solid white;
+  border-radius: 3rem;
+  transition: all .5s ease;
 }
+
+#button:hover{
+  color: #2A5CBF;
+  background-color: white;
+  cursor: pointer;
+}
+
+#explanation{
+  display: flex;
+  flex-direction: row;
+  padding-left:20%;
+  padding-right: 20%;
+  padding-top: 5%;
+}
+

@@ -15,6 +15,7 @@ app.use(express.static(__dirname + "/public"));
 const server = http.createServer(app);
 
 app.get("/", indexRouter);
+app.get("/game", indexRouter);
 
 console.log("starting server!")
 
@@ -58,15 +59,14 @@ class Player{
 
 
 let gameInstance = new GameInstance(1);
-console.log(gameInstance.id);
 
 wss.on("connection", function(ws){
   
   setTimeout(function(){
-    console.log("Connection state: " + ws.readyState);
-    ws.send("Thanks for the message. --Server");
+    // console.log("Connection state: " + ws.readyState);
+    // ws.send("Thanks for the message. --Server");
     // ws.close();
-    console.log("Connection status: " + ws.readyState);
+    // console.log("Connection status: " + ws.readyState);
   }, 2000);
 
   ws.on("message", function incoming(message){
@@ -74,6 +74,8 @@ wss.on("connection", function(ws){
     let type = stringmessage.split("-")[0];
     let data = stringmessage.split("-")[1];
     // console.log(stringmessage);
+
+    //PLAYER TRIES TO CONNECT
     if(type == "0"){
       console.log("A new player has tried connecting to server!");
       if(gameInstances.length == 0 || gameInstances[gameInstances.length - 1].players.length >= 4 || gameInstances[gameInstances.length - 1].gameState != 0){
@@ -85,7 +87,6 @@ wss.on("connection", function(ws){
       let playerNumber = gameInstance.players.length + 1;
       let player = new Player(playerID, gameInstance, ws, playerNumber);
       gameInstances[gameInstances.length - 1].players.push(player);
-      console.log(gameInstances[gameInstances.length - 1].players);
       console.log("Player with ID: " + playerID + " joined gameInstance ID: " + gameInstance.id);
       
       ws.send("0-" + playerNumber);
@@ -97,7 +98,7 @@ wss.on("connection", function(ws){
           element.ws.send("1-1");
           gameInstance.gameState = 2;
           gameInstance.currentPlayer = 1;
-          element.ws.send("2-1");
+          element.ws.send("1-2=1");
         });
       }else{
         gameInstance.players.forEach(element => {
@@ -108,44 +109,80 @@ wss.on("connection", function(ws){
 
     }
 
-    if(type == "1"){
-      let playerID = -1;
-      for(var i = 0; i < players.length; ++i){
-        if(ws == players[i].ws) playerID = players[i].playerID;
-      }
-      let currPlayer = players[playerID];
-      console.log("Dice of " + data + " thrown by player ID: " + playerID + 
-      "\nGame Instance ID: " + currPlayer.gameInstance.id + 
-      "\nPlayer number: " + currPlayer.playern);
-      currPlayer.gameInstance.currDice = parseInt(data);
-    }
+    //PLA
+    // if(type == "1"){
+    //   let playerID = -1;
+    //   for(var i = 0; i < players.length; ++i){
+    //     if(ws == players[i].ws) playerID = players[i].playerID;
+    //   }
+    //   let currPlayer = players[playerID];
+    //   console.log("Dice of " + data + " thrown by player ID: " + playerID + 
+    //   "\nGame Instance ID: " + currPlayer.gameInstance.id + 
+    //   "\nPlayer number: " + currPlayer.playern);
+    //   currPlayer.gameInstance.currDice = parseInt(data);
+    // }
 
+
+    //PLAYER TRIES TO THROW DICE
     if(type == "2"){
+        let playerID = -1;
+        for(var i = 0; i < players.length; ++i){
+          if(ws == players[i].ws) playerID = players[i].playerID;
+        }
+        let gameInstance = players[playerID].gameInstance;
 
+        if(gameInstance.currentPlayer == players[playerID].playern){
+            const diceThrow = Math.floor(Math.random() * 6) + 1;
+            gameInstance.currDice = diceThrow;
+            gameInstance.players.forEach(element => {
+              element.ws.send("2-" + diceThrow);
+            });
+            gameInstance.gameState = 3;
+            gameInstance.players.forEach(element => {
+              element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
+            });
+        }else{
+          console.log("possible cheater ID: " + playerID);
+        }
     }
 
+    //PLAYER TRIES TO MOVE
     if(type == "3"){
       let playerID = -1;
       for(var i = 0; i < players.length; ++i){
         if(ws == players[i].ws) playerID = players[i].playerID;
       }
       let currPlayer = players[playerID];
-      console.log("Pawn N: " + data + " moved by player ID: " + playerID);
-      let currPlace = currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
-      if(currPlace == 0){
-        console.log("Pawn moved to home!");
-        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = (currPlayer.playern -1 ) * 10 + 1;
+      
+      if(data == "0"){
+        console.log("No move available!");
       }else{
-        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = (currPlace + currPlayer.gameInstance.currDice)%41;
+        if(currPlayer.gameInstance.currentPlayer == players[playerID].playern){
+          console.log("Pawn N: " + data + " moved by player ID: " + playerID);
+          let currPlace = currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
+          if(currPlace == 0){
+            currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = (currPlayer.playern -1 ) * 10 + 1;
+          }else{
+            currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = currPlace + currPlayer.gameInstance.currDice;
+            if(currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] > 40) currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] -= 40;
+          }
+          
+
+          /*command: type: 2, pawnPlayer: 1-4, pawnNumber: 1-4, boardPlace: 1-40 */
+          let message = "3-" + currPlayer.playern + "=" + data + "=" + currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
+          currPlayer.gameInstance.players.forEach(element => {
+            element.ws.send(message);
+          });
+        }
       }
-       
-      /*command: type: 2, pawnPlayer: 1-4, pawnNumber: 1-4, boardPlace: 1-40 */
-      let message = "3-" + currPlayer.playern + "=" + data + "=" + currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
-      console.log(currPlayer.gameInstance.players);
+      let gameInstance = currPlayer.gameInstance;
+      gameInstance.currentPlayer += 1;
+      if(gameInstance.currentPlayer > 4) gameInstance.currentPlayer = 1;
+      gameInstance.gameState = 2;
       currPlayer.gameInstance.players.forEach(element => {
-        console.log("message sent: " + message);
-        element.ws.send(message);
+        element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
       });
+
     }
 
   });

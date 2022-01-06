@@ -3,6 +3,24 @@ body{
     /* color: rgb(10, 10, 10); */
 }
 
+#smallscreen{
+    
+    display: none; 
+  justify-content: center; 
+  align-items: center;
+  flex-direction: column;
+}
+
+@media only screen and ((max-width: 1366px) and (max-height: 768px)){
+    main{
+        visibility: hidden;
+    }
+
+    #smallscreen{
+        display: flex;
+    }
+}
+
 #header{
     font-size: 25px;
     color: #2A5CBF;
@@ -11,6 +29,14 @@ body{
     text-align: center;
     font-weight: 700;
 }
+
+@media only screen and (max-height: 1000px){
+    #header{
+        font-size: 20px;
+    }
+}
+
+
 
 #screen{
     min-height: 80vh;
@@ -38,7 +64,7 @@ body{
 }
 
 .box{
-    border: 3px rgb(2, 2, 2) solid;
+    border: 3px rgb(20, 20, 20) solid;
 }
 
 .blue{
@@ -124,7 +150,7 @@ body{
     width: 100%;
     opacity: 0;
     transition: .5s ease;
-    background-color: rgb(2, 2, 2);
+    background-color: rgb(20, 20, 20);
 }
   
 #dice:hover .overlay {

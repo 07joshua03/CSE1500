@@ -11,10 +11,11 @@ const url = window.location.hostname;
 const result = url.replace(/(^\w+:|^)\/\//, '');
 console.log(result);
 const gameinfoele = document.getElementById("gameinfo");
+const gameinfoplayerele = document.getElementById("gameinfoplayer");
 const socket = new WebSocket("wss://" + result); 
 
 let playerNumber = -1;
-let currdice = 0;
+let currDice = 0;
 let currPawn;
 let gameState = 0;
 let currentPlayer = 0;
@@ -46,6 +47,8 @@ socket.onmessage = function(event){
 
     //RECEIVE NEW GAME STATUS
     if(type == "1"){
+        gameinfoplayerele.style.visibility = "hidden";
+        gameinfoplayerele.innerHTML = "";
         if(data.startsWith("0")){
             gameinfoele.innerHTML = data.split("=")[1] + " Player(s) waiting for game to start...";
         }
@@ -56,6 +59,40 @@ socket.onmessage = function(event){
             initpawns();
 
         }
+        if(data.startsWith("2")){
+            gameState = 2;
+            currentPlayer = parseInt(data.split("=")[1]);
+            gameinfoplayerele.style.visibility = "visible";
+            gameinfoplayerele.innerHTML = playerColors[currentPlayer-1].name;
+            gameinfoplayerele.style.color = playerColors[currentPlayer-1].color;
+            gameinfoele.innerHTML = " is currently throwing";
+        }
+    
+        if(data.startsWith("3")){
+            gameState = 3;
+            currentPlayer = parseInt(data.split("=")[1]);
+            gameinfoplayerele.style.visibility = "visible";
+            gameinfoplayerele.innerHTML = playerColors[currentPlayer-1].name;
+            gameinfoplayerele.style.color = playerColors[currentPlayer-1].color;
+            gameinfoele.innerHTML = " is currently moving";
+
+            if(currentPlayer == playerNumber){
+                //CHECK IF A MOVE IS AVAILABLE
+                let moveAvail = false;
+                for(var i = 0; i < 4; i++){
+                    let testPawn = document.getElementById("pawn-" + playerNumber + "-" + (i+1));
+                    if(testPawn.getAttribute("boardPlace") != null){
+                        moveAvail = true;
+                    }else if(currDice == 6){
+                        moveAvail = true;
+                    }
+                }
+
+                if(!moveAvail){
+                    socket.send("3-0");
+                }
+            }
+        }
 
         if(data.startsWith("4")){
             gameState = 4;
@@ -63,14 +100,23 @@ socket.onmessage = function(event){
             if(finishreason == "0"){
                 gameinfoele.innerHTML = "Player left! Aborting game...";
                 /* TODO MAKE PAGE GO BACK TO SPLASH SCREEN */
+                window.location.replace("/");
 
             }
         }
     }
 
+    //RECEIVE A DICE THROW
+    if(type == "2"){
+        currDice = parseInt(data);
+        const newdice = "images/" + parseInt(data) + "dice.svg";
+        document.getElementById("diceimage").setAttribute("src", newdice);
+        document.getElementById("diceimage").setAttribute("value", newdice);
+    }
+
     //RECEIVE A MOVE
     if(type == "3"){
-        console.log("command of type 2 received: "+ event.data);
+        console.log("command of type 3 received: "+ event.data);
         let pawnPlayer = data.split("=")[0];
         let pawnNumber = data.split("=")[1];
         let newBoardPlace = data.split("=")[2];
@@ -92,23 +138,9 @@ socket.onopen = function(){
 };
 
 let throwdice = async function(){
-    const play = Math.floor(Math.random() * 6) + 1;
-    currdice = play;
-    let arr = [6,3,1,5,4,2];
-    // for(var i = 0; i < 2; ++i){
-    //     for(var j = 0; j <= 5; ++j){
-    //         let beforedice = "images/" + arr[j] + "dice.svg";
-    //         document.getElementById("diceimage").setAttribute("src", beforedice);
-    //         await sleep(200);
-    //     }
-    // }
-    const newdice = "images/" + play + "dice.svg";
-    document.getElementById("diceimage").setAttribute("src", newdice);
-    document.getElementById("diceimage").setAttribute("value", newdice);
-
-    socket.send("1-" + play);
-    console.log("Sent dice data!");
-
+    if(gameState == 2 && currentPlayer == playerNumber){
+        socket.send("2-");
+    }
 };
 
 function sleep(ms) {
@@ -152,38 +184,40 @@ function initpawns(){
 
 
 let movepawn = function(pawn){
-    let newPawn = document.getElementById("pawn-" + pawn);
-    if(typeof currPawn !== "undefined"){
-        if(currPawn != newPawn){
-            currPawn.style.backgroundColor = "black";
+    if(gameState == 3 && currentPlayer == playerNumber){
+        let newPawn = document.getElementById("pawn-" + pawn);
+        if(typeof currPawn !== "undefined"){
+            if(currPawn != newPawn){
+                currPawn.style.backgroundColor = "black";
+            }
         }
-    }
-    currPawn = newPawn;
-    let pawnPlayer = pawn.split("-")[0];
-    let pawnNumber = pawn.split("-")[1];
-    if(pawnPlayer == playerNumber){
-        if(currPawn.getAttribute("boardPlace") == undefined){
-            if(currdice == 6){
+
+        
+        currPawn = newPawn;
+        let pawnPlayer = pawn.split("-")[0];
+        let pawnNumber = pawn.split("-")[1];
+        if(pawnPlayer == playerNumber){
+            if(currPawn.getAttribute("boardPlace") == undefined && currDice == 6){
                 currPawn.style.backgroundColor = "red";
                 let homeSquare = document.getElementById("box-" + ((playerNumber - 1) * 10 + 1));
                 let highlightedSquare = document.getElementById("highlighted-1");
                 highlightedSquare.style.gridRow = homeSquare.style.gridRow;
                 highlightedSquare.style.gridColumn = homeSquare.style.gridColumn;
                 highlightedSquare.style.visibility = "visible";
+            }else{
+                let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
+                let highlightedSquare = document.getElementById("highlighted-1");
+                console.log((currPlace + currDice)%41);
+
+                let newSquare = document.getElementById("box-" + (currPlace + currDice)%41);
+                highlightedSquare.style.gridRow = newSquare.style.gridRow;
+                highlightedSquare.style.gridColumn = newSquare.style.gridColumn;
+                highlightedSquare.style.visibility = "visible";
             }
+
         }else{
-            let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
-            let highlightedSquare = document.getElementById("highlighted-1");
-            console.log((currPlace + currdice)%41);
-
-            let newSquare = document.getElementById("box-" + (currPlace + currdice)%41);
-            highlightedSquare.style.gridRow = newSquare.style.gridRow;
-            highlightedSquare.style.gridColumn = newSquare.style.gridColumn;
-            highlightedSquare.style.visibility = "visible";
+            console.log("invalid pawn chosen!");
         }
-
-    }else{
-        console.log("invalid pawn chosen!");
     }
 }
 
