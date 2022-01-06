@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Human, don't be annoyed!</title>
     <link rel="stylesheet" type="text/css" href="stylesheets/game.css"></link>
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 </head>
 <body>
     <section id="header">
-        <h1 id="titleheader">Human, don't be annoyed!</h1>
+        <h1 id="titleheader">HUMAN, DON'T BE ANNOYED!</h1>
     </section>
 
     <main id="screen">
@@ -150,43 +152,42 @@
                 
 
                 <!-- All pawns and highlighted boxes -->
-                <div class="box pawn" id="pawn-1-1"></div>
-                <div class="box pawn" id="pawn-1-2"></div>
-                <div class="box pawn" id="pawn-1-3"></div>
-                <div class="box pawn" id="pawn-1-4"></div>
+                <div class="box pawn" onclick="movepawn('1-1')" id="pawn-1-1"></div>
+                <div class="box pawn" onclick="movepawn('1-2')" id="pawn-1-2"></div>
+                <div class="box pawn" onclick="movepawn('1-3')" id="pawn-1-3"></div>
+                <div class="box pawn" onclick="movepawn('1-4')" id="pawn-1-4"></div>
 
-                <div class="box pawn" id="pawn-2-1"></div>
-                <div class="box pawn" id="pawn-2-2"></div>
-                <div class="box pawn" id="pawn-2-3"></div>
-                <div class="box pawn" id="pawn-2-4"></div>
+                <div class="box pawn" onclick="movepawn('2-1')" id="pawn-2-1"></div>
+                <div class="box pawn" onclick="movepawn('2-2')" id="pawn-2-2"></div>
+                <div class="box pawn" onclick="movepawn('2-3')" id="pawn-2-3"></div>
+                <div class="box pawn" onclick="movepawn('2-4')" id="pawn-2-4"></div>
 
-                <div class="box pawn" id="pawn-3-1"></div>
-                <div class="box pawn" id="pawn-3-2"></div>
-                <div class="box pawn" id="pawn-3-3"></div>
-                <div class="box pawn" id="pawn-3-4"></div>
+                <div class="box pawn" onclick="movepawn('3-1')" id="pawn-3-1"></div>
+                <div class="box pawn" onclick="movepawn('3-2')" id="pawn-3-2"></div>
+                <div class="box pawn" onclick="movepawn('3-3')" id="pawn-3-3"></div>
+                <div class="box pawn" onclick="movepawn('3-4')" id="pawn-3-4"></div>
 
-                <div class="box pawn" id="pawn-4-1"></div>
-                <div class="box pawn" id="pawn-4-2"></div>
-                <div class="box pawn" id="pawn-4-3"></div>
-                <div class="box pawn" id="pawn-4-4"></div>
+                <div class="box pawn" onclick="movepawn('4-1')" id="pawn-4-1"></div>
+                <div class="box pawn" onclick="movepawn('4-2')" id="pawn-4-2"></div>
+                <div class="box pawn" onclick="movepawn('4-3')" id="pawn-4-3"></div>
+                <div class="box pawn" onclick="movepawn('4-4')" id="pawn-4-4"></div>
 
-                <div class="box highlighted" id="highlighted-1"></div>
-                <div class="box highlighted" id="highlighted-1"></div>
-                <div class="box highlighted" id="highlighted-1"></div>
-                <div class="box highlighted" id="highlighted-1"></div>
+                <div class="box highlighted" onclick="confirmmove()" id="highlighted-1"></div>
+                <div class="box highlighted" id="highlighted-2"></div>
+                <div class="box highlighted" id="highlighted-3"></div>
+                <div class="box highlighted" id="highlighted-4"></div>
             </div>
         </div>
         
         <div class="userinfo">
-            <p id="messages">This is a message for the player...
-                <span id="test2"></span>
-            </p>
+            <p id="messages"><span id="connect"></span></p>
             <div id="dice">
                 <img id="diceimage" src="images/1dice.svg" onclick="throwdice()"></img>
                 <div class="overlay" onclick="throwdice()">
                     <div class="text">Click to throw</div>
                 </div>
             </div>
+            <p id="playerinfo"><span id="playerinfo2"></span><span id="playercolor"></span></p>
         </div>
         
         <!-- <section id="players">

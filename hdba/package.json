@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node app.js 3000"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -13,5 +13,13 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "ws": "^8.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0"
   }
 }
