@@ -1,5 +1,6 @@
 body{
     font-family: 'Segoe UI';
+    /* color: rgb(10, 10, 10); */
 }
 
 #header{
@@ -37,7 +38,7 @@ body{
 }
 
 .box{
-    border: 3px black solid;
+    border: 3px rgb(2, 2, 2) solid;
 }
 
 .blue{
@@ -88,7 +89,7 @@ body{
 .pawn{
     width: 100%;
     height: 100%;
-     background-color: black;
+    background-color: black;
     border: black 2px dotted;
     content: "0";
     opacity: 40%;

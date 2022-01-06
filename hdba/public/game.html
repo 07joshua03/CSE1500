@@ -11,10 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section id="header">
+    <div id="header">
         <h1 id="titleheader">HUMAN, DON'T BE ANNOYED!</h1>
-    </section>
-
+    </div>
     <main id="screen">
         <div id="container">
             <div id="board">
@@ -180,7 +179,7 @@
         </div>
         
         <div class="userinfo">
-            <p id="messages"><span id="connect"></span></p>
+            <p id="messages"><span id="gameinfo"></span></p>
             <div id="dice">
                 <img id="diceimage" src="images/1dice.svg" onclick="throwdice()"></img>
                 <div class="overlay" onclick="throwdice()">
@@ -189,14 +188,6 @@
             </div>
             <p id="playerinfo"><span id="playerinfo2"></span><span id="playercolor"></span></p>
         </div>
-        
-        <!-- <section id="players">
-            <p>Player 1: <span></span></p>
-            <p>Player 2: <span></span></p>
-            <p>Player 3: <span></span></p>
-            <p>Player 4: <span></span></p>
-        </section>
-         -->
 
     </main>
     <script src="javascripts/game.js"></script>

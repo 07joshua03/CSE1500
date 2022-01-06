@@ -10,12 +10,21 @@ class Message{
 const url = window.location.hostname;
 const result = url.replace(/(^\w+:|^)\/\//, '');
 console.log(result);
-const target = document.getElementById("connect");
+const gameinfoele = document.getElementById("gameinfo");
 const socket = new WebSocket("wss://" + result); 
 
 let playerNumber = -1;
 let currdice = 0;
 let currPawn;
+let gameState = 0;
+let currentPlayer = 0;
+
+let playerColors = [
+    {color: "#949BA6", name: "GRAY"}, 
+    {color: "#2A5CBF", name: "BLUE"}, 
+    {color: "#011126", name: "DARKBLUE"},
+    {color: "#45648C", name: "GRAYBLUE"}
+]
 
 socket.onmessage = function(event){
     console.log(event.data);
@@ -25,29 +34,42 @@ socket.onmessage = function(event){
     //INITIAL CONNECTION (RECEIVE PLAYER NUMBER/COLOR)
     if(type == "0"){
         playerNumber = parseInt(data);
-        let array = [
-            {color: "#949BA6", name: "GRAY"}, 
-            {color: "#2A5CBF", name: "BLUE"}, 
-            {color: "#011126", name: "DARKBLUE"},
-            {color: "#45648C", name: "GRAYBLUE"}
-        ]
-        let name = array[playerNumber-1].name;
+        
+        let name = playerColors[playerNumber-1].name;
         const playerinfo2element = document.getElementById("playerinfo2");
         const playercolorelement = document.getElementById("playercolor");
-        playercolorelement.style.color = array[playerNumber-1].color;
+        playercolorelement.style.color = playerColors[playerNumber-1].color;
         playercolorelement.style.fontWeight = "bold";
-        target.innerHTML = "Connected to server!";
         playerinfo2element.innerHTML = "You're ";
         playercolorelement.innerHTML = name;
     }
 
     //RECEIVE NEW GAME STATUS
     if(type == "1"){
-        
+        if(data.startsWith("0")){
+            gameinfoele.innerHTML = data.split("=")[1] + " Player(s) waiting for game to start...";
+        }
+        if(data == "1"){
+            gameState = 1;
+            console.log("Game is starting... Initializing pawns");
+            gameinfoele.innerHTML = "Game is starting...";
+            initpawns();
+
+        }
+
+        if(data.startsWith("4")){
+            gameState = 4;
+            let finishreason = data.split("=")[1];
+            if(finishreason == "0"){
+                gameinfoele.innerHTML = "Player left! Aborting game...";
+                /* TODO MAKE PAGE GO BACK TO SPLASH SCREEN */
+
+            }
+        }
     }
 
     //RECEIVE A MOVE
-    if(type == "2"){
+    if(type == "3"){
         console.log("command of type 2 received: "+ event.data);
         let pawnPlayer = data.split("=")[0];
         let pawnNumber = data.split("=")[1];
@@ -66,7 +88,7 @@ socket.onmessage = function(event){
 socket.onopen = function(){
     socket.send("0-null");
     console.log("sent request");
-    target.innerHTML = "Requesting to connect to server...";
+    gameinfoele.innerHTML = "Requesting to connect to server...";
 };
 
 let throwdice = async function(){
@@ -128,7 +150,6 @@ function initpawns(){
     }
 }   
 
-initpawns();
 
 let movepawn = function(pawn){
     let newPawn = document.getElementById("pawn-" + pawn);
@@ -171,7 +192,7 @@ let confirmmove = function(){
     currPawn.style.backgroundColor = "black";
     let pawnPlayer = infoarray[1];
     let pawnNumber = infoarray[2];
-    let message = "2-" + pawnNumber;
+    let message = "3-" + pawnNumber;
     socket.send(message);
     console.log("Server command sent: " + message);
     let highlightedSquare = document.getElementById("highlighted-1");
