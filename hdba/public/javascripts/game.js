@@ -221,14 +221,14 @@ function movepawn(pawn) {
         let pawnPlayer = pawn.split("-")[0];
         let pawnNumber = pawn.split("-")[1];
         if (pawnPlayer == playerNumber) {
-            if (currPawn.getAttribute("boardPlace") == undefined && currDice == 6) {
+            if (currPawn.getAttribute("boardPlace") == undefined && currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
                 currPawn.style.backgroundColor = "red";
                 let homeSquare = document.getElementById("box-" + ((playerNumber - 1) * 10 + 1));
                 let highlightedSquare = document.getElementById("highlighted-1");
                 highlightedSquare.style.gridRow = homeSquare.style.gridRow;
                 highlightedSquare.style.gridColumn = homeSquare.style.gridColumn;
                 highlightedSquare.style.visibility = "visible";
-            } else {
+            } else if(currPawn.getAttribute("boardPlace") != undefined && !pawns[playerNumber - 1].includes(parseInt(currPawn.getAttribute("boardPlace")) + currDice)){
                 let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
                 let highlightedSquare = document.getElementById("highlighted-1");
                 console.log((currPlace + currDice) % 41);

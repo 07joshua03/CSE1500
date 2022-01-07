@@ -213,7 +213,7 @@ function debug(ws, data) {
   if (password == "THROW") {
     let dicePlayer = dataarray[1];
     let diceAmount = dataarray[2];
-    gameInstance.currDice = diceAmount;
+    gameInstance.currDice = parseInt(diceAmount);
     gameInstance.currentPlayer = parseInt(dicePlayer);
     gameInstance.players.forEach(element => {
       element.ws.send("2-" + diceAmount);
