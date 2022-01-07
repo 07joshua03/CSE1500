@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js 3000"
+    "start": "node app.js 3000 & ngrok http 3000"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -12,6 +12,7 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "serve-favicon": "^2.5.0",
     "ws": "^8.4.0"
   },
   "devDependencies": {

@@ -100,7 +100,8 @@ socket.onmessage = function(event){
             if(finishreason == "0"){
                 gameinfoele.innerHTML = "Player left! Aborting game...";
                 /* TODO MAKE PAGE GO BACK TO SPLASH SCREEN */
-                window.location.replace("/");
+                setTimeout(() => {window.location.replace("/");}, 2000);
+                
 
             }
         }

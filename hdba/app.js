@@ -2,6 +2,8 @@
 const express = require("express");
 const http = require("http");
 const websocket = require("ws");
+const favicon = require("serve-favicon");
+
 
 const indexRouter = require("./routes/index");  
 
@@ -12,6 +14,8 @@ const app = express();
 app.set("view engine", "ejs"); /*CHECK*/
 // @ts-ignore
 app.use(express.static(__dirname + "/public"));
+// @ts-ignore
+app.use(favicon(__dirname + "/public/images/favicon.ico"));
 const server = http.createServer(app);
 
 app.get("/", indexRouter);
