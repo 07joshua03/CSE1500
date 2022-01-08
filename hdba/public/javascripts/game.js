@@ -104,7 +104,7 @@ function updateGameStatus(data) {
             let moveAvail = false;
             for (var i = 0; i < 4; i++) {
                 let testPawn = document.getElementById("pawn-" + playerNumber + "-" + (i + 1));
-                if (testPawn.getAttribute("boardPlace") != null && !pawns[playerNumber - 1].includes(parseInt(testPawn.getAttribute("boardPlace")) + currDice)) {
+                if ((testPawn.getAttribute("boardPlace") != null && testPawn.getAttribute("boardPlace") != "0") && !pawns[playerNumber - 1].includes(parseInt(testPawn.getAttribute("boardPlace")) + currDice)) {
                     moveAvail = true;
                 } else if (currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
                     moveAvail = true;
