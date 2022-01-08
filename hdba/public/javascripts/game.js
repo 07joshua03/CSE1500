@@ -254,7 +254,7 @@ function movepawn(pawn) {
                 let newBoardPlace = (currPlace + currDice);
                 let destNumbers = [40, 10, 20, 30];
                 let isDestSquare = false;
-                if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7) {
+                if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace < destNumbers[playerNumber - 1]) {
                     isDestSquare = true;
                     newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
                     console.log(newBoardPlace);
