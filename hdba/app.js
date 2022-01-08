@@ -121,9 +121,26 @@ function movePawn(ws, data) {
       if (currPlace == 0) {
         currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = (currPlayer.playern - 1) * 10 + 1;
       } else {
-        let newPlace = currPlace + currPlayer.gameInstance.currDice;
-        if (newPlace > 40) newPlace -= 40;
-        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = newPlace;
+        let newBoardPlace = currPlace + currPlayer.gameInstance.currDice;
+        let destNumbers = [40, 10, 20, 30];
+        let isDestSquare = false;
+        let playerNumber = currPlayer.playern;
+        if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7) {
+          isDestSquare = true;
+          newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
+          console.log(newBoardPlace);
+          if (newBoardPlace > 4) {
+            if (newBoardPlace == 5) newBoardPlace = 3;
+            else if (newBoardPlace == 6) newBoardPlace = 2;
+            else if (newBoardPlace == 7) newBoardPlace = 1;
+          }
+          newBoardPlace += 40 + (playerNumber - 1) * 4;
+        } else {
+          isDestSquare = false;
+        }
+
+        if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = newBoardPlace;
       }
       //CHECK IF THERE IS OPPONENT PAWN AT NEW BOARDPLACE
       for (let i = 0; i < 4; ++i) {
@@ -146,12 +163,25 @@ function movePawn(ws, data) {
     }
   }
   let gameInstance = currPlayer.gameInstance;
-  gameInstance.currentPlayer += 1;
-  if (gameInstance.currentPlayer > 4) gameInstance.currentPlayer = 1;
-  gameInstance.gameState = 2;
-  gameInstance.players.forEach(element => {
-    element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
-  });
+
+  let hasWon = true;
+  for (var i = 0; i < 4; ++i) {
+    if (gameInstance.pawns[gameInstance.currentPlayer - 1][i] <= (40 + (gameInstance.currentPlayer - 1) * 4) || gameInstance.pawns[gameInstance.currentPlayer - 1][i] > 44 + (gameInstance.currentPlayer - 1) * 4) hasWon = false;
+  }
+  if (hasWon) {
+    gameInstance.players.forEach(element =>{
+      element.ws.send("1-4=" + gameInstance.currentPlayer);
+    });
+    console.log("PLAYER HAS WON");
+  } else {
+    gameInstance.currentPlayer += 1;
+    if (gameInstance.currentPlayer > 4) gameInstance.currentPlayer = 1;
+    gameInstance.gameState = 2;
+    gameInstance.players.forEach(element => {
+      element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
+    });
+  }
+
 
 }
 
@@ -219,7 +249,7 @@ function debug(ws, data) {
       element.ws.send("2-" + diceAmount);
     });
     gameInstance.gameState = 3;
-    
+
     gameInstance.players.forEach(element => {
       element.ws.send("1-" + gameInstance.gameState + "=" + dicePlayer);
     });

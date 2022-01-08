@@ -58,7 +58,7 @@ function throwdice() {
 
 function initConnection(data) {
     playerNumber = parseInt(data);
-
+    keepAlive();
     let name = playerColors[playerNumber - 1].name;
     const playerinfo2element = document.getElementById("playerinfo2");
     const playercolorelement = document.getElementById("playercolor");
@@ -125,10 +125,21 @@ function updateGameStatus(data) {
             gameinfoele.innerHTML = "Player left! Aborting game...";
             /* TODO MAKE PAGE GO BACK TO SPLASH SCREEN */
             setTimeout(() => { window.location.replace("/"); }, 2000);
-
-
+        }else{
+            gameinfoele.innerHTML = " player has won!";
+            gameinfoplayerele.style.visibility = "visible";
+            gameinfoplayerele.innerHTML = playerColors[finishreason - 1].name;
+            gameinfoplayerele.style.color = playerColors[finishreason - 1].color;
+            setTimeout(() => { window.location.replace("/"); }, 5000);
         }
     }
+}
+
+function keepAlive() {
+    setTimeout(() => {
+        socket.send("UPDATE");
+        keepAlive();
+    }, 20000);
 }
 
 function updateDiceThrow(data) {
@@ -214,7 +225,15 @@ function movepawn(pawn) {
         let newPawn = document.getElementById("pawn-" + pawn);
         if (typeof currPawn !== "undefined") {
             if (currPawn != newPawn) {
-                currPawn.style.backgroundColor = "black";
+                if (currPawn.classList.contains("gray")) {
+                    currPawn.style.backgroundColor = playerColors[0].color;
+                } else if (currPawn.classList.contains("blue")) {
+                    currPawn.style.backgroundColor = playerColors[1].color;
+                } else if (currPawn.classList.contains("darkblue")) {
+                    currPawn.style.backgroundColor = playerColors[2].color;
+                } else if (currPawn.classList.contains("grayblue")) {
+                    currPawn.style.backgroundColor = playerColors[3].color;
+                }
             }
         }
         currPawn = newPawn;
@@ -228,12 +247,30 @@ function movepawn(pawn) {
                 highlightedSquare.style.gridRow = homeSquare.style.gridRow;
                 highlightedSquare.style.gridColumn = homeSquare.style.gridColumn;
                 highlightedSquare.style.visibility = "visible";
-            } else if(currPawn.getAttribute("boardPlace") != undefined && !pawns[playerNumber - 1].includes(parseInt(currPawn.getAttribute("boardPlace")) + currDice)){
+            } else if (currPawn.getAttribute("boardPlace") != undefined && !pawns[playerNumber - 1].includes(parseInt(currPawn.getAttribute("boardPlace")) + currDice)) {
+                currPawn.style.backgroundColor = "red";
                 let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
                 let highlightedSquare = document.getElementById("highlighted-1");
-                console.log((currPlace + currDice) % 41);
+                let newBoardPlace = (currPlace + currDice);
+                let destNumbers = [40, 10, 20, 30];
+                let isDestSquare = false;
+                if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7) {
+                    isDestSquare = true;
+                    newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
+                    console.log(newBoardPlace);
+                    if (newBoardPlace > 4) {
+                        if (newBoardPlace == 5) newBoardPlace = 3;
+                        else if (newBoardPlace == 6) newBoardPlace = 2;
+                        else if (newBoardPlace == 7) newBoardPlace = 1;
+                    }
+                    newBoardPlace += 40 + (playerNumber - 1) * 4;
+                } else {
+                    isDestSquare = false;
+                }
 
-                let newSquare = document.getElementById("box-" + (currPlace + currDice) % 41);
+                if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+                console.log(newBoardPlace);
+                let newSquare = document.getElementById("box-" + newBoardPlace);
                 highlightedSquare.style.gridRow = newSquare.style.gridRow;
                 highlightedSquare.style.gridColumn = newSquare.style.gridColumn;
                 highlightedSquare.style.visibility = "visible";
