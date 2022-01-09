@@ -6,9 +6,9 @@ Made by 07Joshua03 and SophieVDL
 ## Installation
 
 ```
-'Go inside of hdba folder'
-'npm install .'
-'npm start'
+Go inside of hdba folder
+npm install .
+npm start
 ```
 
 ## Gameplay:
