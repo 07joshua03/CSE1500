@@ -240,7 +240,7 @@ function movepawn(pawn) {
         let pawnPlayer = pawn.split("-")[0];
         let pawnNumber = pawn.split("-")[1];
         if (pawnPlayer == playerNumber) {
-            if (currPawn.getAttribute("boardPlace") == undefined && currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
+            if ((currPawn.getAttribute("boardPlace") == undefined || currPawn.getAttribute("boardPlace") == "0")&& currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
                 currPawn.style.backgroundColor = "red";
                 let homeSquare = document.getElementById("box-" + ((playerNumber - 1) * 10 + 1));
                 let highlightedSquare = document.getElementById("highlighted-1");
@@ -254,9 +254,9 @@ function movepawn(pawn) {
                 let newBoardPlace = (currPlace + currDice);
                 let destNumbers = [40, 10, 20, 30];
                 let isDestSquare = false;
-                if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace < destNumbers[playerNumber - 1]) {
+                if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1]) {
                     isDestSquare = true;
-                    newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
+                    newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];  //THIS DOESNT WORK IN MOST CASES
                     console.log(newBoardPlace);
                     if (newBoardPlace > 4) {
                         if (newBoardPlace == 5) newBoardPlace = 3;

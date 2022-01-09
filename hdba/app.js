@@ -48,7 +48,10 @@ app.use(express.static(__dirname + "/public"));
 app.use(favicon(__dirname + "/public/images/favicon.ico"));
 const server = http.createServer(app);
 
-app.get("/", indexRouter);
+// app.get("/", indexRouter);
+app.get("/", function(req, res){
+  res.render("splash.ejs", {currentlyPlaying: getCurrentlyPlaying(), ongoingGames: getOngoingGames(), waiting: getWaiting()});
+});
 app.get("/game", indexRouter);
 
 console.log("Starting web-server!")
@@ -125,7 +128,7 @@ function movePawn(ws, data) {
         let destNumbers = [40, 10, 20, 30];
         let isDestSquare = false;
         let playerNumber = currPlayer.playern;
-        if (newBoardPlace >= destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace < destNumbers[playerNumber - 1]) {
+        if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1]) {
           isDestSquare = true;
           newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
           console.log(newBoardPlace);
@@ -172,6 +175,7 @@ function movePawn(ws, data) {
     gameInstance.players.forEach(element =>{
       element.ws.send("1-4=" + gameInstance.currentPlayer);
     });
+    gameInstance.gameState = 4;
     console.log("PLAYER HAS WON");
   } else {
     gameInstance.currentPlayer += 1;
@@ -188,7 +192,7 @@ function movePawn(ws, data) {
 function playerLeft(ws) {
   let player = getPlayer(ws);
   console.log("Player ID: " + player.playerID + " left!");
-  player.gameInstance.gameState = "4-0";
+  player.gameInstance.gameState = 4;
   player.gameInstance.players.forEach(element => {
     element.ws.send("1-4=0");
   });
@@ -254,6 +258,32 @@ function debug(ws, data) {
       element.ws.send("1-" + gameInstance.gameState + "=" + dicePlayer);
     });
   }
+}
+
+function getCurrentlyPlaying(){
+  let currentlyPlaying = 0;
+  for(var i = 0; i < gameInstances.length; i++){
+    if(gameInstances[i].gameState != 0 && gameInstances[i].gameState != 4){
+      currentlyPlaying += 4;
+    }
+  }
+  return currentlyPlaying;
+}
+
+function getOngoingGames(){
+  let ongoingGames = 0;
+  for(var i = 0; i < gameInstances.length; i++){
+    if(gameInstances[i].gameState != 0 && gameInstances[i].gameState != 4){
+      ++ongoingGames;
+    }
+  }
+  return ongoingGames;
+}
+
+function getWaiting(){
+  let waiting = 0;
+  if(gameInstances[gameInstances.length - 1].players.length != 4) waiting = gameInstances[gameInstances.length - 1].players.length;
+  return waiting;
 }
 
 wss.on("connection", function (ws) {

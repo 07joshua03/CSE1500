@@ -1,38 +1,84 @@
+html{
+  background: linear-gradient(135deg, rgba(51,111,231,1) 0%, rgba(42,92,191,1) 84%, rgba(52,88,159,1) 100%); 
+  height: 100%;
+}
+
 body{
   font-family: 'Segoe UI';
-  color: rgb(20, 20, 20);
   display: flex; 
   justify-content: center; 
   align-items: center;
   flex-direction: column;
+  font-weight: 500;
+  height: 100%;
+  margin: 0;
+
+  /* color: rgb(20, 20, 20); */
+
+  color: #fafafa;
+  }
+
+h1{
+  padding: 50px 0px 0px 0px;
+  margin:0px;
 }
 
 #header{
-  font-size: 50px;
-  color: #2A5CBF;
+  font-size: 3em;
   font-family: "Oswald";
-  /* text-align: center; */
   font-weight: 700;
+  margin-bottom: 0px;
+  text-align: center;  
+
+  /* color: #2A5CBF;
+  text-shadow: 1px 1px 3px #2A5CBF; */
+  
+  color: #fafafa;
+  text-shadow: 1px 1px 3px #fafafa;
+  
+}
+
+#credits{
+  text-shadow: none;
+  font-weight: 400;
+  font-size: 0.4em;
+  padding: 0px;
+  margin:10px 0px 30px 0px;
+
 }
 
 #button{
-  background-color: #2A5CBF;
+  position: relative;
+  
   border: none;
   padding: 20px 50px;
-  color: white;
+  margin-top:40px;
+  margin-bottom: 40px;
+  /* margin-bottom: 20px; */
+ 
   text-align: center;
   display: inline-block;
   font-size: 32px;
   align-items: center;
-  border: 2px solid white;
+  /* border: 2px solid white; */
   border-radius: 3rem;
   transition: all .5s ease;
+
+  /* background-color: #2A5CBF;
+  color: white; */
+
+  background-color: #fafafa;
+  color: #2A5CBF;
 }
 
 #button:hover{
-  color: #2A5CBF;
-  background-color: white;
   cursor: pointer;
+
+  /* color: #2A5CBF;
+  background-color: white; */
+
+  background-color: #2A5CBF;
+  color: white;
 }
 
 #explanation{
@@ -40,7 +86,6 @@ body{
   flex-direction: row;
   padding-left:20%;
   padding-right: 20%;
-  padding-top: 5%;
 }
 
 #smallscreen{
@@ -60,3 +105,53 @@ flex-direction: column;
       display: flex;
   }
 }
+
+#statistics{
+  border-radius: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  background: rgb(237,243,255);
+  background: linear-gradient(20deg, rgba(237,243,255,1) 0%, rgba(251,252,255,1) 34%, rgba(250,250,250,1) 51%, rgba(248,251,255,1) 69%, rgb(247, 250, 255) 100%); 
+  color: #2A5CBF;
+}
+
+.statistic{
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 8px 0 8px 0;
+}
+
+.step{
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 15px;
+  padding: 20px;
+  width: 30%;
+  justify-content: center;
+  font-weight: 600;
+
+  background: rgb(237,243,255);
+  background: linear-gradient(20deg, rgba(237,243,255,1) 0%, rgba(251,252,255,1) 34%, rgba(250,250,250,1) 51%, rgba(248,251,255,1) 69%, rgb(192, 213, 255) 100%); 
+  color: #2A5CBF;
+
+  /* background: linear-gradient(135deg, rgba(51,111,231,1) 0%, rgba(42,92,191,1) 84%, rgba(52,88,159,1) 100%); 
+  color: white; */
+}
+
+.step-indicator{
+  position: relative;
+  border-radius: 100%;
+  display: inline-block;
+  padding: 15px 23px 15px 23px;
+  margin:0;
+  font-size: 2rem;
+  font-weight: bold;
+
+  background: #2A5CBF;
+  color: #FAFAFA;
+}
+
