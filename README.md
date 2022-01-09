@@ -10,14 +10,7 @@ Made by 07Joshua03 and SophieVDL
 'npm install .'
 'npm start'
 
-
-## Bugs
-1 - When player 2(blue) is moving from place 10(just before dest squares) into dest via throw server-side is correct yet client-side displays incorrectly
-
-2 - When one is put back to home, BoardPlace isn't set back to 0, which means next time it moves out of home it goes to random ass places
-
-
-Gameplay:
+## Gameplay:
 
 1. Player throws a dice. Whenever a 6 is thrown, you may place a pawn onto the board. Otherwise you may move 1 pawn so many spaces.
 2. Make a move (if you can.) Whenever your pawn would land on another's, you kill them and send them back to their home square.
