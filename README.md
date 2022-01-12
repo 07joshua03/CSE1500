@@ -17,3 +17,14 @@ npm start
 1. Player throws a dice. Whenever a 6 is thrown, you may place a pawn onto the board. Otherwise you may move 1 pawn so many spaces.
 2. Make a move (if you can.) Whenever your pawn would land on another's, you kill them and send them back to their home square.
 3. The goal is to get all 4 of your pawns to your street by walking them around the board. Goodluck!
+
+## Bugs:
+
+*  Fix entire pawn moving structure
+1. Check if pawn move is to destination square
+    - if so, isDestSquare is true and new newBoardPlace is calculated
+2. Check if another pawn is already at newBoardPlace
+    - if so, no valid move for this pawn
+    - if not, move on
+
+    

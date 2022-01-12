@@ -49,6 +49,8 @@ const pawnStartPositions = [[
     { x: 11, y: 11 }
 ]];
 
+let destNumbers = [40, 10, 20, 30];
+
 let pawns = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 function throwdice() {
     if (gameState == 2 && currentPlayer == playerNumber) {
@@ -104,9 +106,28 @@ function updateGameStatus(data) {
             let moveAvail = false;
             for (var i = 0; i < 4; i++) {
                 let testPawn = document.getElementById("pawn-" + playerNumber + "-" + (i + 1));
-                if ((testPawn.getAttribute("boardPlace") != null && testPawn.getAttribute("boardPlace") != "0") && !pawns[playerNumber - 1].includes(parseInt(testPawn.getAttribute("boardPlace")) + currDice)) {
+                let currentPlace = parseInt(testPawn.getAttribute("boardPlace"));
+                let newPlace = currentPlace + currDice;
+
+                //FOR IF TO MOVE TO DEST SQUARE
+                if (newPlace > destNumbers[playerNumber - 1] && newPlace <= destNumbers[playerNumber - 1] + 7 && currentPlace <= destNumbers[playerNumber - 1] && currentPlace <= 40) {
+                    newPlace = newPlace - destNumbers[playerNumber - 1];
+                    if (newPlace > 4) {
+                        if (newPlace == 5) newPlace = 3;
+                        else if (newPlace == 6) newPlace = 2;
+                        else if (newPlace == 7) newPlace = 1;
+                    }
+                    newPlace += 40 + (playerNumber - 1) * 4;
+                }
+                if (currentPlace + currDice > 40) {
+
+                }
+                if ((currentPlace != 0 &&
+                    //  (parseInt(testPawn.getAttribute("boardPlace")) + currDice <= destNumbers[playerNumber - 1] + 4)) && 
+                    (newPlace <= 40 + (playerNumber - 1) * 4 + 4)) &&
+                    !pawns[playerNumber - 1].includes(newPlace)) {
                     moveAvail = true;
-                } else if (currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
+                } else if (currDice == 6 && currentPlace == 0 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
                     moveAvail = true;
                 }
             }
@@ -125,7 +146,7 @@ function updateGameStatus(data) {
             gameinfoele.innerHTML = "Player left! Aborting game...";
             /* TODO MAKE PAGE GO BACK TO SPLASH SCREEN */
             setTimeout(() => { window.location.replace("/"); }, 2000);
-        }else{
+        } else {
             gameinfoele.innerHTML = " player has won!";
             gameinfoplayerele.style.visibility = "visible";
             gameinfoplayerele.innerHTML = playerColors[finishreason - 1].name;
@@ -145,8 +166,18 @@ function keepAlive() {
 function updateDiceThrow(data) {
     currDice = parseInt(data);
     const newdice = "images/" + parseInt(data) + "dice.svg";
-    document.getElementById("diceimage").setAttribute("src", newdice);
-    document.getElementById("diceimage").setAttribute("value", newdice);
+
+    let diceele = document.getElementById("altdice");
+    diceele.setAttribute("style", "animation: diceanim 1.0s infinite; animation-timing-function: steps(1, end);");
+    setTimeout(() => {
+        let styleele = "background-image: url('../" + newdice + "');"
+        diceele.setAttribute("style", styleele);
+        // document.getElementById("altdice").setAttribute("src", newdice);
+        // document.getElementById("altdice").setAttribute("value", newdice);
+    }, 2000);
+
+    // document.getElementById("diceimage").setAttribute("src", newdice);
+    // document.getElementById("diceimage").setAttribute("value", newdice);
 }
 
 function updatePawn(data) {
@@ -205,8 +236,6 @@ socket.onopen = function () {
 
 
 function initpawns() {
-
-
     for (var j = 1; j < 5; j++) {
         for (var i = 1; i < 5; ++i) {
             let id = "pawn-" + j + "-" + i;
@@ -214,6 +243,7 @@ function initpawns() {
             currpawn.style.gridRow = pawnStartPositions[j - 1][i - 1].y.toString();
             currpawn.style.gridColumn = pawnStartPositions[j - 1][i - 1].x.toString();
             currpawn.style.visibility = "visible";
+            currpawn.setAttribute("boardPlace", "0");
 
         }
     }
@@ -236,48 +266,75 @@ function movepawn(pawn) {
                 }
             }
         }
+        let oldPawn = currPawn;
         currPawn = newPawn;
         let pawnPlayer = pawn.split("-")[0];
         let pawnNumber = pawn.split("-")[1];
+        let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
+        let newBoardPlace = (currPlace + currDice);
         if (pawnPlayer == playerNumber) {
-            if ((currPawn.getAttribute("boardPlace") == undefined || currPawn.getAttribute("boardPlace") == "0")&& currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
+
+            //CHECK IF CURRENT PAWN IS AT HOME
+            if (currPlace == 0 && currDice == 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) {
                 currPawn.style.backgroundColor = "red";
                 let homeSquare = document.getElementById("box-" + ((playerNumber - 1) * 10 + 1));
                 let highlightedSquare = document.getElementById("highlighted-1");
                 highlightedSquare.style.gridRow = homeSquare.style.gridRow;
                 highlightedSquare.style.gridColumn = homeSquare.style.gridColumn;
                 highlightedSquare.style.visibility = "visible";
-            } else if (currPawn.getAttribute("boardPlace") != undefined && !pawns[playerNumber - 1].includes(parseInt(currPawn.getAttribute("boardPlace")) + currDice)) {
-                currPawn.style.backgroundColor = "red";
-                let currPlace = parseInt(currPawn.getAttribute("boardPlace"));
-                let highlightedSquare = document.getElementById("highlighted-1");
-                let newBoardPlace = (currPlace + currDice);
-                let destNumbers = [40, 10, 20, 30];
+
+                //IF A PAWN IS NOT AT HOME, TREAT NORMALLY
+            } else if (currPlace != 0) {
                 let isDestSquare = false;
-                if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1]) {
+
+                //IF THE PAWN IS TO MOVE TO DESTINATION SQUARE 
+                if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1] && currPlace <= 40) {
+                    console.log("Pawn is going to destination square");
                     isDestSquare = true;
-                    newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];  //THIS DOESNT WORK IN MOST CASES
-                    console.log(newBoardPlace);
+                    newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
                     if (newBoardPlace > 4) {
-                        if (newBoardPlace == 5) newBoardPlace = 3;
-                        else if (newBoardPlace == 6) newBoardPlace = 2;
-                        else if (newBoardPlace == 7) newBoardPlace = 1;
+                        newBoardPlace = 8 % newBoardPlace;
                     }
                     newBoardPlace += 40 + (playerNumber - 1) * 4;
-                } else {
-                    isDestSquare = false;
                 }
 
-                if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
-                console.log(newBoardPlace);
-                let newSquare = document.getElementById("box-" + newBoardPlace);
-                highlightedSquare.style.gridRow = newSquare.style.gridRow;
-                highlightedSquare.style.gridColumn = newSquare.style.gridColumn;
-                highlightedSquare.style.visibility = "visible";
+                //CHECK IF PAWN IS NOT OBSTRUCTED BY OTHER FRIENDLY PAWN
+                if (!pawns[playerNumber - 1].includes(newBoardPlace)) { 
+                   //CHECK IF MOVE DOESN'T MOVE PAWN TOO FAR (ONLY WHEN ALREADY IN DEST SUARES)
+                    if (newBoardPlace <= 40 + (playerNumber - 1) * 4 + 4) {
+                        console.log("normal pawn routine");
+                        if (currPlace > 40) {
+                            // if (newBoardPlace <= destNumbers[playerNumber - 1] + 4) {
+                                isDestSquare = true;
+                            // }
+                        }
+                        if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+                        console.log(newBoardPlace);
+                        let newSquare = document.getElementById("box-" + newBoardPlace);
+                        currPawn.style.backgroundColor = "red";
+                        let highlightedSquare = document.getElementById("highlighted-1");
+                        highlightedSquare.style.gridRow = newSquare.style.gridRow;
+                        highlightedSquare.style.gridColumn = newSquare.style.gridColumn;
+                        highlightedSquare.style.visibility = "visible";
+                    } else {
+                        console.log("Can't move pawn up even further!");
+                        currPawn = oldPawn;
+                        currPawn.style.backgroundColor = "red";
+                    }
+                } else {
+                    console.log("Another friendly pawn already at destination!");
+                    currPawn = oldPawn;
+                    currPawn.style.backgroundColor = "red";
+                }
+            } else {
+                console.log("You haven't thrown 6 so can't move pawn from home");
+                currPawn = oldPawn;
+                currPawn.style.backgroundColor = "red";
             }
-
         } else {
-            console.log("invalid pawn chosen!");
+            console.log("That is not your pawn!");
+            currPawn = oldPawn;
+            currPawn.style.backgroundColor = "red";
         }
     }
 }
