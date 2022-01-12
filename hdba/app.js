@@ -1,3 +1,5 @@
+//@ts-check
+
 /*
 Game states:
 0: Game not started yet
@@ -64,17 +66,16 @@ let players = [];
 
 
 function newPlayer(ws) {
-  console.log("A new player has tried connecting to server!");
   if (gameInstances.length == 0 || gameInstances[gameInstances.length - 1].players.length >= 4 || gameInstances[gameInstances.length - 1].gameState != 0) {
     gameInstances.push(new GameInstance(gameInstances.length));
-    console.log("Created new game instance with id: " + gameInstances[gameInstances.length - 1].id);
+    console.log("GI " + gameInstances[gameInstances.length - 1].id + ": Created");
   }
   let playerID = players.length;
   let gameInstance = gameInstances[gameInstances.length - 1];
   let playerNumber = gameInstance.players.length + 1;
   let player = new Player(playerID, gameInstance, ws, playerNumber);
   gameInstances[gameInstances.length - 1].players.push(player);
-  console.log("Player with ID: " + playerID + " joined gameInstance ID: " + gameInstance.id);
+  console.log("GI " + gameInstance.id + ": Player ID " + playerID + " joined");
 
   ws.send("0-" + playerNumber);
   players.push(player);
@@ -100,7 +101,8 @@ function throwDice(ws) {
 
   if (gameInstance.currentPlayer == player.playern) {
     const diceThrow = Math.floor(Math.random() * 6) + 1;
-    gameInstance.currDice = diceThrow;
+    gameInstance.currentDice = diceThrow;
+    console.log("GI " + gameInstance.id + ": Player " + player.playern + " dice: " + diceThrow);
     gameInstance.players.forEach(element => {
       element.ws.send("2-" + diceThrow);
     });
@@ -109,53 +111,101 @@ function throwDice(ws) {
       element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
     });
   } else {
-    console.log("possible cheater ID: " + player.playerID);
+    console.log("GI " + gameInstance.id + ": possible cheater ID " + player.playerID + ": REASON INVALID DICE");
   }
 }
 
 function movePawn(ws, data) {
   let currPlayer = getPlayer(ws);
+  let pawnNumber = parseInt(data);
+  let gameInstance = currPlayer.gameInstance;
+
+  let destNumbers = [40, 10, 20, 30];
+
+  //INDICATES NO AVAIABLE MOVE FROM CLIENT-SIDE
   if (data == "0") {
-    console.log("No move available!");
+    // console.log("GI " + currPlayer.gameInstance.id + ": No move avail for player ID: " + currPlayer.playerID + " N.: " + currPlayer.playern);
   } else {
-    if (currPlayer.gameInstance.currentPlayer == currPlayer.playern) {
-      console.log("Pawn N: " + data + " moved by player ID: " + currPlayer.playerID);
-      let currPlace = currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
-      if (currPlace == 0) {
-        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = (currPlayer.playern - 1) * 10 + 1;
-      } else {
-        let newBoardPlace = currPlace + currPlayer.gameInstance.currDice;
-        let destNumbers = [40, 10, 20, 30];
+
+    //CHECK IF CORRECT PLAYER TRIES TO MOVE
+    if (gameInstance.currentPlayer == currPlayer.playern) {
+
+      let currPlace = gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1];
+
+      let newBoardPlace = currPlace + gameInstance.currentDice;
+
+      //INCASE OF MOVING FROM HOME
+      if(currPlace == 0){
+        if(gameInstance.currentDice == 6){
+          newBoardPlace = (currPlayer.playern - 1) * 10 + 1;
+        }else{
+          console.log(gameInstance.currentDice);
+          console.log("GI " + gameInstance.id + ": Player " + currPlayer.playern + " move pawn from home without 6 CHEAT?");
+        }
+        //DEFAULT BEHAVIOR
+      }else if (currPlace != 0){
         let isDestSquare = false;
-        let playerNumber = currPlayer.playern;
-        if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1] && currPlace <= 40) {
+
+        //INCASE OF MOVING TO DESTINATION SQUARE
+        if(newBoardPlace > destNumbers[currPlayer.playern - 1] && newBoardPlace <= destNumbers[currPlayer.playern - 1] + 7 && currPlace <= destNumbers[currPlayer.playern - 1] && currPlace <= 40){
           isDestSquare = true;
-          newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
-          console.log(newBoardPlace);
+          newBoardPlace = newBoardPlace - destNumbers[currPlayer.playern - 1];
           if (newBoardPlace > 4) {
-            if (newBoardPlace == 5) newBoardPlace = 3;
-            else if (newBoardPlace == 6) newBoardPlace = 2;
-            else if (newBoardPlace == 7) newBoardPlace = 1;
+              newBoardPlace = 8 % newBoardPlace;
           }
-          newBoardPlace += 40 + (playerNumber - 1) * 4;
-        } else if (currPlace > 40) {
-          if (newBoardPlace <= destNumbers[playerNumber - 1] + 4) {
-            isDestSquare = true;
-          }
-        } else {
-          isDestSquare = false;
+          newBoardPlace += 40 + (currPlayer.playern - 1) * 4;
         }
 
-        if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
-        currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1] = newBoardPlace;
+        //NORMAL CASE
+        if(newBoardPlace <= 40 + (currPlayer.playern - 1) * 4 + 4){
+          if(currPlace > 40){
+            isDestSquare = true;
+          }
+
+          //INCASE PEOPLE TRY TO CHEAT FUCK EM
+          if(newBoardPlace > 40 + (currPlayer.playern - 1) * 4 + 4) newBoardPlace = 40 + (currPlayer.playern - 1) * 4 + 4;
+          if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+
+        }
+        
       }
+      currPlayer.gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1] = newBoardPlace;
+
+
+      // if (currPlace == 0) {
+      //   currPlayer.gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1] = (currPlayer.playern - 1) * 10 + 1;
+      // } else {
+      //   let newBoardPlace = currPlace + currPlayer.gameInstance.currentDice;
+      //   let destNumbers = [40, 10, 20, 30];
+      //   let isDestSquare = false;
+      //   let playerNumber = currPlayer.playern;
+      //   if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1] && currPlace <= 40) {
+      //     isDestSquare = true;
+      //     newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
+      //     if (newBoardPlace > 4) {
+      //       if (newBoardPlace == 5) newBoardPlace = 3;
+      //       else if (newBoardPlace == 6) newBoardPlace = 2;
+      //       else if (newBoardPlace == 7) newBoardPlace = 1;
+      //     }
+      //     newBoardPlace += 40 + (playerNumber - 1) * 4;
+      //   } else if (currPlace > 40) {
+      //     if (newBoardPlace <= destNumbers[playerNumber - 1] + 4) {
+      //       isDestSquare = true;
+      //     }
+      //   } else {
+      //     isDestSquare = false;
+      //   }
+
+      //   if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+      //   currPlayer.gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1] = newBoardPlace;
+      // }
       //CHECK IF THERE IS OPPONENT PAWN AT NEW BOARDPLACE
       for (let i = 0; i < 4; ++i) {
         if (i != currPlayer.playern - 1) {
-          for (let j = 0; j < currPlayer.gameInstance.pawns[i].length; ++j) {
-            if (currPlayer.gameInstance.pawns[i][j] == currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1]) {
-              currPlayer.gameInstance.pawns[i][j] = 0;
-              currPlayer.gameInstance.players.forEach(element => {
+          for (let j = 0; j < gameInstance.pawns[i].length; ++j) {
+            if (gameInstance.pawns[i][j] == gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1]) {
+              gameInstance.pawns[i][j] = 0;
+              gameInstance.players.forEach(element => {
                 element.ws.send("3-" + (i + 1) + "=" + (j + 1) + "=0");
               });
             }
@@ -163,13 +213,13 @@ function movePawn(ws, data) {
         }
       }
       /*command: type: 2, pawnPlayer: 1-4, pawnNumber: 1-4, boardPlace: 1-40 */
-      let message = "3-" + currPlayer.playern + "=" + data + "=" + currPlayer.gameInstance.pawns[currPlayer.playern - 1][parseInt(data) - 1];
-      currPlayer.gameInstance.players.forEach(element => {
+      let message = "3-" + currPlayer.playern + "=" + data + "=" + gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1];
+      console.log("GI " + gameInstance.id + ": Player " + currPlayer.playern + " moved pawn " + pawnNumber + " from " + currPlace + " to " + gameInstance.pawns[currPlayer.playern - 1][pawnNumber - 1]);
+      gameInstance.players.forEach(element => {
         element.ws.send(message);
       });
     }
   }
-  let gameInstance = currPlayer.gameInstance;
 
   let hasWon = true;
   for (var i = 0; i < 4; ++i) {
@@ -180,9 +230,9 @@ function movePawn(ws, data) {
       element.ws.send("1-4=" + gameInstance.currentPlayer);
     });
     gameInstance.gameState = 4;
-    console.log("PLAYER HAS WON");
+    console.log("GI " + gameInstance.id + ": Player " + gameInstance.currentPlayer.playern + " has won");
   } else {
-    if (gameInstance.currDice == 6 || gameInstance.currDice == 1) {
+    if (gameInstance.currentDice == 6 || gameInstance.currentDice == 1) {
       gameInstance.gameState = 2;
       gameInstance.players.forEach(element => {
         element.ws.send("1-" + gameInstance.gameState + "=" + gameInstance.currentPlayer);
@@ -203,7 +253,7 @@ function movePawn(ws, data) {
 
 function playerLeft(ws) {
   let player = getPlayer(ws);
-  console.log("Player ID: " + player.playerID + " left!");
+  console.log("GI " + player.gameInstance.id +  ": Player " + player.playern + " ID: " + player.playerID + " left!");
   player.gameInstance.gameState = 4;
   player.gameInstance.players.forEach(element => {
     element.ws.send("1-4=0");
@@ -229,7 +279,8 @@ function debug(ws, data) {
     let pawnPlayer = parseInt(dataarray[1]);
     let pawnNumber = parseInt(dataarray[2]);
     let boardPlace = parseInt(dataarray[3]);
-    console.log("DEBUG COMMAND RECEIVED: " + data);
+
+    console.log("GI " + sentPlayer.gameInstance.id + ": DEBUG Player " + pawnPlayer + " MOVE " + pawnNumber + " TO " + boardPlace);
     gameInstance.pawns[pawnPlayer - 1][pawnNumber - 1] = boardPlace;
     //CHECK IF ANOTHER OPPONENT IS ALREADY THERE
     for (let i = 0; i < 4; ++i) {
@@ -259,7 +310,9 @@ function debug(ws, data) {
   if (password == "THROW") {
     let dicePlayer = dataarray[1];
     let diceAmount = dataarray[2];
-    gameInstance.currDice = parseInt(diceAmount);
+
+    console.log("GI " + sentPlayer.gameInstance.id + ": DEBUG Player " + dicePlayer.playern + " DICE " + diceAmount);
+    gameInstance.currentDice = parseInt(diceAmount); 
     gameInstance.currentPlayer = parseInt(dicePlayer);
     gameInstance.players.forEach(element => {
       element.ws.send("2-" + diceAmount);

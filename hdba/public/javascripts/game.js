@@ -11,6 +11,7 @@ const url = window.location.hostname;
 const result = url.replace(/(^\w+:|^)\/\//, '');
 console.log(result);
 const gameinfoele = document.getElementById("gameinfo");
+const extrainfo = document.getElementById("extrainfo");
 const gameinfoplayerele = document.getElementById("gameinfoplayer");
 const socket = new WebSocket("wss://" + result);
 
@@ -320,21 +321,25 @@ function movepawn(pawn) {
                         console.log("Can't move pawn up even further!");
                         currPawn = oldPawn;
                         currPawn.style.backgroundColor = "red";
+                        changeExtraInfo("Can't move pawn up even further!");
                     }
                 } else {
                     console.log("Another friendly pawn already at destination!");
                     currPawn = oldPawn;
                     currPawn.style.backgroundColor = "red";
+                    changeExtraInfo("Another friendly pawn already at destination!");
                 }
             } else {
-                console.log("You haven't thrown 6 so can't move pawn from home");
+                console.log("You haven't thrown 6 so you can't move pawn from home!");
                 currPawn = oldPawn;
                 currPawn.style.backgroundColor = "red";
+                changeExtraInfo("You haven't thrown 6 so you can't move pawn from home!");
             }
         } else {
             console.log("That is not your pawn!");
             currPawn = oldPawn;
             currPawn.style.backgroundColor = "red";
+            changeExtraInfo("That is not your pawn!");
         }
     }
 }
@@ -363,4 +368,11 @@ function confirmmove() {
 
 function sendcommand(message) {
     socket.send(message);
+}
+
+function changeExtraInfo(message){
+    extrainfo.innerHTML = message;
+    setTimeout(()=>{
+        extrainfo.innerHTML = "";
+    }, 5000);
 }
