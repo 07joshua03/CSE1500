@@ -20,6 +20,7 @@ let currDice = 0;
 let currPawn;
 let gameState = 0;
 let currentPlayer = 0;
+let gameStateChanged = false;
 
 let playerColors = [
     { color: "#949BA6", name: "GRAY" },
@@ -74,6 +75,7 @@ function initConnection(data) {
 function updateGameStatus(data) {
     gameinfoplayerele.style.visibility = "hidden";
     gameinfoplayerele.innerHTML = "";
+    gameStateChanged = true;
     if (data.startsWith("0")) {
         gameinfoele.innerHTML = data.split("=")[1] + " Player(s) waiting for game to start...";
     }
@@ -300,13 +302,13 @@ function movepawn(pawn) {
                 }
 
                 //CHECK IF PAWN IS NOT OBSTRUCTED BY OTHER FRIENDLY PAWN
-                if (!pawns[playerNumber - 1].includes(newBoardPlace)) { 
-                   //CHECK IF MOVE DOESN'T MOVE PAWN TOO FAR (ONLY WHEN ALREADY IN DEST SUARES)
+                if (!pawns[playerNumber - 1].includes(newBoardPlace)) {
+                    //CHECK IF MOVE DOESN'T MOVE PAWN TOO FAR (ONLY WHEN ALREADY IN DEST SUARES)
                     if (newBoardPlace <= 40 + (playerNumber - 1) * 4 + 4) {
                         console.log("normal pawn routine");
                         if (currPlace > 40) {
                             // if (newBoardPlace <= destNumbers[playerNumber - 1] + 4) {
-                                isDestSquare = true;
+                            isDestSquare = true;
                             // }
                         }
                         if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
@@ -365,14 +367,82 @@ function confirmmove() {
     highlightedSquare.style.visibility = "hidden";
 }
 
+function changeExtraInfo(message) {
+    extrainfo.innerHTML = message;
+    setTimeout(() => {
+        extrainfo.innerHTML = "";
+    }, 5000);
+}
 
 function sendcommand(message) {
     socket.send(message);
 }
 
-function changeExtraInfo(message){
-    extrainfo.innerHTML = message;
-    setTimeout(()=>{
-        extrainfo.innerHTML = "";
-    }, 5000);
+function startAI() {
+    if (currentPlayer === playerNumber && gameStateChanged) {
+        switch (gameState) {
+            case 0:
+                console.log("AI waiting for game to start");
+                break;
+            case 1:
+                console.log("AI waiting on end of init");
+                break;
+            case 2:
+                socket.send("2-");
+                gameStateChanged = false;
+                break;
+            case 3:
+                let randpawns = [Math.floor(Math.random() * 4) + 1];
+                for (let i = 1; i < 5; i++) if (!randpawns.includes(i)) randpawns.push(i);
+                for (let i = 0; i < 4; i++) {
+                    if (moveAI(randpawns[i])) {
+                        socket.send("3-" + randpawns[i]);
+                        gameStateChanged = false;
+                        break;
+                    }
+                }
+                gameStateChanged = false;
+                break;
+            case 4:
+                console.log("Game ended, so AI ended");
+                return;
+        }
+    }
+    setTimeout(() => { startAI() }, 50);
+}
+
+function moveAI(pawnNumber) {
+    let currPlace = pawns[playerNumber - 1][pawnNumber - 1];
+    let newBoardPlace = (currPlace + currDice);
+    if (currPlace === 0 && currDice === 6 && !pawns[playerNumber - 1].includes(((playerNumber - 1) * 10 + 1))) return true;
+    else if (currPlace !== 0) {
+        let isDestSquare = false;
+        if (newBoardPlace > destNumbers[playerNumber - 1] && newBoardPlace <= destNumbers[playerNumber - 1] + 7 && currPlace <= destNumbers[playerNumber - 1] && currPlace <= 40) {
+            isDestSquare = true;
+            newBoardPlace = newBoardPlace - destNumbers[playerNumber - 1];
+            if (newBoardPlace > 4) {
+                newBoardPlace = 8 % newBoardPlace;
+            }
+            newBoardPlace += 40 + (playerNumber - 1) * 4;
+        }
+        if (!pawns[playerNumber - 1].includes(newBoardPlace)) {
+            if (newBoardPlace <= 40 + (playerNumber - 1) * 4 + 4) {
+                console.log("normal pawn routine");
+                if (currPlace > 40) {
+                    isDestSquare = true;
+                }
+                if (newBoardPlace > 40 && !isDestSquare) newBoardPlace -= 40;
+                return true;
+            } else {
+                console.log("Can't move pawn up even further!");
+                return false;
+            }
+        } else {
+            console.log("Another friendly pawn already at destination!");
+            return false;
+        }
+    } else {
+        console.log("You haven't thrown 6 so you can't move pawn from home!");
+        return false;
+    }
 }
