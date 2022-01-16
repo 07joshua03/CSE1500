@@ -1,56 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/splash.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+    <title>Human, don't get annoyed!</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="stylesheets/splash.css"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet"/>
-    <title>Human, don't be annoyed!</title>
-</head>
-
-<body>
+  <body>
     <section id="header">
-        <h1>HUMAN, DON'T BE ANNOYED!</h1>
-        <h4 id="credits">A game made by Sophie van der Linden & Joshua Gort</h4>
+      <h1>HUMAN, DON'T GET ANNOYED!</h1>
+      <h4 id="credits">A game made by Joshua Gort & Sophie van der Linden</h4>
     </section>
     <div id="smallscreen">
-        <p>Screen is too small! We require a resolution of at least 1366x768!</p>
+      <p>Screen is too small! We require a resolution of at least 1366x768!</p>
     </div>
     <div id="statistics" class="tohide">
-        <p class="statistic">Currently playing: <%= currentlyPlaying %></p>
-        <p class="statistic">Ongoing games: <%= ongoingGames %></p>
-        <p class="statistic">Players waiting: <%= waiting %></p>
+      <p class="statistic">Currently playing: <%= currentlyPlaying %></p>
+      <p class="statistic">Ongoing games: <%= ongoingGames %></p>
+      <p class="statistic">Players waiting: <%= waiting %></p>
     </div>
 
     <main class="tohide">
-        <a href="game"><button id="button">Play!</button></a>
+      <a href="game"><button id="button">Play!</button></a>
     </main>
     <section id="explanation" class="tohide">
-        <div class="step">
-            <div>
-                <p class="step-indicator">1.</p>
-            </div>
-            <p>Player throws a dice. Whenever a 6 is thrown, you may place a pawn onto the board. Otherwise you may move 1 pawn. </p>
+      <div class="step">
+        <div>
+          <p class="step-indicator">1.</p>
         </div>
-        <div class="step middlestep">
-            <div>
-                <p class="step-indicator">2.</p>
-            </div>
-            <p>Make a move (if you can.) Whenever your pawn would land on another's, you kill them and send them back to their home square.</p>
+        <p>
+          Player throws a dice. Whenever a 6 is thrown, you may place a pawn
+          onto the board and throw again (also with 1.) Otherwise you may move 1 pawn.
+        </p>
+      </div>
+      <div class="step middlestep">
+        <div>
+          <p class="step-indicator">2.</p>
         </div>
-        <div class="step">
-            <div>
-                <p class="step-indicator">3.</p>
-            </div>
-            <p>The goal is to get all 4 of your pawns to your street by walking them around the board. Goodluck and have fun!</p>
+        <p>
+          Make a move (if you can). Whenever your pawn would land on another's,
+          you kill them and send them back to their home square.
+        </p>
+      </div>
+      <div class="step">
+        <div>
+          <p class="step-indicator">3.</p>
         </div>
+        <p>
+          The goal is to get all 4 of your pawns to your street by walking them
+          around the board. Good luck and have fun!
+        </p>
+      </div>
     </section>
-
-
-</body>
-
+  </body>
 </html>

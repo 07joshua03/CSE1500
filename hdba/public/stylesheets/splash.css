@@ -1,131 +1,132 @@
-html{
-  background: linear-gradient(135deg, rgba(51,111,231,1) 0%, rgba(42,92,191,1) 84%, rgba(52,88,159,1) 100%); 
+html {
+  background: linear-gradient(
+    135deg,
+    rgba(51, 111, 231, 1) 0%,
+    rgba(42, 92, 191, 1) 84%,
+    rgba(52, 88, 159, 1) 100%
+  );
   height: 100%;
 }
 
-body{
-  font-family: 'Segoe UI';
-  display: flex; 
-  justify-content: center; 
+body {
+  font-family: "Segoe UI";
+  display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   font-weight: 500;
   height: 100%;
   margin: 0;
 
-  /* color: rgb(20, 20, 20); */
-
   color: #fafafa;
-  }
-
-h1{
-  padding: 30px 0px 0px 0px;
-  margin:0px;
 }
 
-#header{
+h1 {
+  padding: 30px 0px 0px 0px;
+  margin: 0px;
+}
+
+#header {
   font-size: 3em;
   font-family: "Oswald";
   font-weight: 700;
   margin-bottom: 0px;
-  text-align: center;  
+  text-align: center;
 
-  /* color: #2A5CBF;
-  text-shadow: 1px 1px 3px #2A5CBF; */
-  
   color: #fafafa;
   text-shadow: 1px 1px 3px #fafafa;
-  
 }
 
-#credits{
+#credits {
   text-shadow: none;
   font-weight: 400;
   font-size: 0.4em;
   padding: 0px;
-  margin:10px 0px 30px 0px;
-
+  margin: 10px 0px 30px 0px;
 }
 
-#button{
+#button {
   position: relative;
-  
+
   border: none;
   padding: 20px 50px;
-  margin-top:40px;
+  margin-top: 40px;
   margin-bottom: 40px;
-  /* margin-bottom: 20px; */
- 
+
+  font-family: "Segoe UI";
   text-align: center;
   display: inline-block;
   font-size: 32px;
   align-items: center;
-  /* border: 2px solid white; */
-  border-radius: 3rem;
-  transition: all .5s ease;
 
-  /* background-color: #2A5CBF;
-  color: white; */
+  border-radius: 3rem;
+  transition: all 0.5s ease;
 
   background-color: #fafafa;
-  color: #2A5CBF;
+  color: #2a5cbf;
 }
 
-#button:hover{
+#button:hover {
   cursor: pointer;
 
-  /* color: #2A5CBF;
-  background-color: white; */
-
-  background-color: #2A5CBF;
+  background-color: #2a5cbf;
   color: white;
 }
 
-#explanation{
+#button:active {
+  text-decoration: underline;
+}
+#explanation {
   display: flex;
   flex-direction: row;
-  padding-left:20%;
+  padding-left: 20%;
   padding-right: 20%;
 }
 
-#smallscreen{
-    
-  display: none; 
-justify-content: center; 
-align-items: center;
-flex-direction: column;
+#smallscreen {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-@media only screen and ((max-width: 1366px) or (max-height: 768px)){
-  .tohide{
-      visibility: hidden;
+@media only screen and ((max-width: 1366px) or (max-height: 768px)) {
+  .tohide {
+    visibility: hidden;
   }
 
-  #smallscreen{
-      display: flex;
+  #smallscreen {
+    display: flex;
   }
 }
 
-#statistics{
+#statistics {
   border-radius: 15px;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 10px;
   padding-bottom: 10px;
 
-  background: rgb(237,243,255);
-  background: linear-gradient(20deg, rgba(237,243,255,1) 0%, rgba(251,252,255,1) 34%, rgba(250,250,250,1) 51%, rgba(248,251,255,1) 69%, rgb(247, 250, 255) 100%); 
-  color: #2A5CBF;
+  background: rgb(237, 243, 255);
+  background: linear-gradient(
+    20deg,
+    rgba(237, 243, 255, 1) 0%,
+    rgba(251, 252, 255, 1) 34%,
+    rgba(250, 250, 250, 1) 51%,
+    rgba(248, 251, 255, 1) 69%,
+    rgb(247, 250, 255) 100%
+  );
+  color: #2a5cbf;
 }
 
-.statistic{
+.statistic {
   font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
   margin: 8px 0 8px 0;
 }
 
-.step{
+.step {
   margin-left: 20px;
   margin-right: 20px;
   border-radius: 15px;
@@ -136,24 +137,27 @@ flex-direction: column;
 
   flex-basis: 100%;
 
-  background: rgb(237,243,255);
-  background: linear-gradient(20deg, rgba(237,243,255,1) 0%, rgba(251,252,255,1) 34%, rgba(250,250,250,1) 51%, rgba(248,251,255,1) 69%, rgb(192, 213, 255) 100%); 
-  color: #2A5CBF;
-
-  /* background: linear-gradient(135deg, rgba(51,111,231,1) 0%, rgba(42,92,191,1) 84%, rgba(52,88,159,1) 100%); 
-  color: white; */
+  background: rgb(237, 243, 255);
+  background: linear-gradient(
+    20deg,
+    rgba(237, 243, 255, 1) 0%,
+    rgba(251, 252, 255, 1) 34%,
+    rgba(250, 250, 250, 1) 51%,
+    rgba(248, 251, 255, 1) 69%,
+    rgb(192, 213, 255) 100%
+  );
+  color: #2a5cbf;
 }
 
-.step-indicator{
+.step-indicator {
   position: relative;
   border-radius: 100%;
   display: inline-block;
   padding: 15px 23px 15px 23px;
-  margin:0;
+  margin: 0;
   font-size: 2rem;
   font-weight: bold;
 
-  background: #2A5CBF;
-  color: #FAFAFA;
+  background: #2a5cbf;
+  color: #fafafa;
 }
-
